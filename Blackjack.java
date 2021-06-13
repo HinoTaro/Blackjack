@@ -1,3 +1,6 @@
+import java.util.Random;
+import java.util.Timer;
+
 class Board {
 
   // ディーラーと自分と山札のカード
@@ -17,7 +20,7 @@ class Board {
   void init_dealer_card() {
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 13; j++) {
-        cp_card[i][j] = 0;
+        dealer_card[i][j] = 0;
       }
     }
   }
@@ -30,6 +33,28 @@ class Board {
     }
   }
 
+  void hit(int[][] card) {
+    Random rand = new Random();
+    int flag = 0;
+    while (flag == 0) {
+      int i = rand.nextInt(4);
+      int j = rand.nextInt(13);
+      if (deck_card[i][j] == 1) {
+        card_set(i, j, card);
+        card_reset(i, j, deck_card);
+        flag=1;
+      }
+    }
+  }
+
+  int[][] getMyCard() {
+    return my_card;
+  }
+
+  int[][] getDealerCard() {
+    return dealer_card;
+  }
+
   // カードの所持、未所持を管理
   void card_set(int i, int j, int[][] card) {
     card[i][j] = 1;
@@ -40,7 +65,8 @@ class Board {
   }
 
   // ディーラーと自分のハンドの値
-  private int my_hand = 0, dealer_hand = 0;
+  private int my_hand = 0;
+  private int dealer_hand = 0;
 
   int getMyHand() {
     return my_hand;
@@ -50,16 +76,40 @@ class Board {
     return dealer_hand;
   }
 
-  int setMyHand(int my_hand) {
+  void setMyHand(int my_hand) {
     this.my_hand = my_hand;
   }
 
-  int setDealerHand(int dealer_hand) {
+  void setDealerHand(int dealer_hand) {
     this.dealer_hand = dealer_hand;
   }
 
+  int is_burst(int hand) {
+    if (hand > 21) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  //勝敗判定、勝ちで1、分けで0、負けで-1
+  int is_win(){
+    if(my_hand>dealer_hand){return 1;}
+    else if(my_hand==dealer_hand){return 0;}
+    else{return -1;}
+  }
+
+  // ディーラーがカードを追加するか判定
+  int dealer_draw() {
+    if (dealer_hand < 17) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
   // ハンドを計算
-  int calc_hand(int[][] card) {
+  int calc_hand(int[][] card){
     int hand = 0;
     int i, j;
     for (i = 0; i < 4; i++) {
@@ -93,7 +143,7 @@ class Board {
     return my_coin;
   }
 
-  int setMyCoin(int my_coin) {
+  void setMyCoin(int my_coin) {
     this.my_coin = my_coin;
   }
 
@@ -101,11 +151,22 @@ class Board {
     return bet_coin;
   }
 
-  int setBetCoin(int bet_coin) {
+  void setBetCoin(int bet_coin) {
     this.bet_coin = bet_coin;
   }
 
   public static void main(String argv[]) {
     Board board = new Board();
+    Timer timer = new Timer();
+    printf("Game Start\n------------\n");
+    while(1){
+      board.init_my_card();
+      board.init_dealer_card();
+      board.init_deck_card();
+      board.hit(board.getMyCard());
+      board.hit(board.getMyCard());
+      board.hit(board.getDealerCard());
+      board.hit(board.getDealerCard());
+    }
   }
 }
