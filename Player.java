@@ -52,7 +52,7 @@ class Player {
     System.out.print("\n");
   }
 
-  // ディーラーと自分のハンドの値
+  // ハンドの合計値
   private int hand_sum = 0;
 
   int getHandSum() {
@@ -78,7 +78,7 @@ class Player {
         hand_sum += (hand_card[i][1] + 1);
       }
     }
-    while (is_burst() == 1 && ace_num > 0) {
+    while (hand_sum > 21 && ace_num > 0) {
       hand_sum -= 10;
       ace_num--;
     }
@@ -86,7 +86,7 @@ class Player {
   }
 
   int is_burst() {
-    if (hand_sum > 21) {
+    if (this.hand_sum > 21) {
       return 1;
     } else {
       return 0;
@@ -130,17 +130,21 @@ class Player {
 
   //賭けるコイン数を標準入力で受けとる
   void choose_coin(){
-    Scanner scanner = new Scanner(System.in);
     int bet_flag=0;
     while (bet_flag == 0) {
       System.out.print("Coin : ");
       System.out.println(this.getCoin());
       System.out.print("choose how many coins you bet\n--->");
-      this.setBetCoin(scanner.nextInt());
       try {
+        Scanner scanner = new Scanner(System.in);
+        this.setBetCoin(scanner.nextInt());
         if (this.can_bet() == 1) {
           bet_flag = 1;
-        } else {
+        } else if(this.bet_coin==0){
+          System.out
+              .println("You need to select one or more coins.\nPlease type again.");
+        }
+        else {
           System.out
               .println("The number of bet coins exceeds the number of coins in your possession.\nPlease type again.");
         }
