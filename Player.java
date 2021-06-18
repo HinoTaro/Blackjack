@@ -6,87 +6,87 @@ class Player {
   // [ n ]{ m , l }で、n枚目に引いたカードのmがスート、l+1が数字を表す。
   //// m=0:スペード,m=1:ハート,m=2:ダイヤ,m=3:クラブ
   // 所持可能なカードは最大で12枚。m=l=-1のときカードはそこにない。
-  private int[][] hand_card = new int[12][2];
+  private int[][] handCard = new int[12][2];
   // 所持カード枚数
-  private int hand_num = 0;
+  private int handNum = 0;
 
   int getHandNum() {
-    return hand_num;
+    return handNum;
   }
 
-  void setHandNum(int hand_num) {
-    this.hand_num = hand_num;
+  void setHandNum(int handNum) {
+    this.handNum = handNum;
   }
 
   // カードの初期化
-  void init_hand_card() {
+  void initHandCard() {
     for (int i = 0; i < 12; i++) {
       for (int j = 0; j < 2; j++) {
-        hand_card[i][j] = -1;
+        handCard[i][j] = -1;
       }
     }
   }
 
   int[][] getHandCard() {
-    return hand_card;
+    return handCard;
   }
 
   void setHandCard(int card[]) {
-    this.hand_card[this.hand_num][0] = card[0];
-    this.hand_card[this.hand_num][1] = card[1];
+    this.handCard[this.handNum][0] = card[0];
+    this.handCard[this.handNum][1] = card[1];
   }
 
   void printOpenHandCard() {
-    for (int i = 0; i < hand_num; i++) {
-      System.out.print(this.hand_card[i][1]+1);
+    for (int i = 0; i < handNum; i++) {
+      System.out.print(this.handCard[i][1]+1);
       System.out.print(" ");
     }
     System.out.print("\n");
   }
 
   void printCloseHandCard() {
-    System.out.print(this.hand_card[0][1]+1);
-    for (int i = 1; i < hand_num; i++) {
+    System.out.print(this.handCard[0][1]+1);
+    for (int i = 1; i < handNum; i++) {
       System.out.print(" ■");
     }
     System.out.print("\n");
   }
 
   // ハンドの合計値
-  private int hand_sum = 0;
+  private int handSum = 0;
 
   int getHandSum() {
-    return hand_sum;
+    return handSum;
   }
 
-  void setHandSum(int hand_sum) {
-    this.hand_sum = hand_sum;
+  void setHandSum(int handSum) {
+    this.handSum = handSum;
   }
 
   // ハンドを計算
-  void calc_hand() {
-    int hand_sum = 0;
+  void calcHand() {
+    int handSum = 0;
     int ace_num = 0;
     int i;
-    for (i = 0; i <= this.hand_num; i++) {
-      if (hand_card[i][1] == 0) {
+    for (i = 0; i <= this.handNum; i++) {
+      if (handCard[i][1] == 0) {
         ace_num++;
-        hand_sum += 11;
-      } else if (hand_card[i][1] >= 9) {
-        hand_sum += 10;
+        handSum += 11;
+      } else if (handCard[i][1] >= 9) {
+        handSum += 10;
       } else {
-        hand_sum += (hand_card[i][1] + 1);
+        handSum += (handCard[i][1] + 1);
       }
     }
-    while (hand_sum > 21 && ace_num > 0) {
-      hand_sum -= 10;
+    while (handSum > 21 && ace_num > 0) {
+      handSum -= 10;
       ace_num--;
     }
-    setHandSum(hand_sum);
+    setHandSum(handSum);
   }
 
-  int is_burst() {
-    if (this.hand_sum > 21) {
+  int isBurst() {
+    if (this.handSum > 21) {
       return 1;
     } else {
       return 0;
@@ -94,28 +94,28 @@ class Player {
   }
 
   // コイン
-  private int my_coin = 100;
-  private int bet_coin = 0;
+  private int myCoin = 100;
+  private int betCoin = 0;
 
   int getCoin() {
-    return my_coin;
+    return myCoin;
   }
 
-  void setCoin(int my_coin) {
-    this.my_coin = my_coin;
+  void setCoin(int myCoin) {
+    this.myCoin = myCoin;
   }
 
   int getBetCoin() {
-    return bet_coin;
+    return betCoin;
   }
 
-  void setBetCoin(int bet_coin) {
-    this.bet_coin = bet_coin;
+  void setBetCoin(int betCoin) {
+    this.betCoin = betCoin;
   }
 
   //選択したコイン数を賭けられるのか判定
-  int can_bet() {
-    if (this.bet_coin <= this.my_coin) {
+  int canBet() {
+    if (this.betCoin <= this.myCoin) {
       return 1;
     } else {
       return 0;
@@ -123,13 +123,13 @@ class Player {
   }
 
   //コインを1枚以上持っているか判定
-  int have_coin(){
+  int haveCoin(){
     if(this.getCoin()>0){return 1;}
     return 0;
   }
 
   //賭けるコイン数を標準入力で受けとる
-  void choose_coin(){
+  void chooseCoin(){
     int bet_flag=0;
     while (bet_flag == 0) {
       System.out.print("Coin : ");
@@ -138,9 +138,9 @@ class Player {
       try {
         Scanner scanner = new Scanner(System.in);
         this.setBetCoin(scanner.nextInt());
-        if (this.can_bet() == 1) {
+        if (this.canBet() == 1) {
           bet_flag = 1;
-        } else if(this.bet_coin==0){
+        } else if(this.betCoin==0){
           System.out
               .println("You need to select one or more coins.\nPlease type again.");
         }
@@ -155,7 +155,7 @@ class Player {
   }
 
   // ディーラーがカードを追加するか判定
-  int dealer_draw() {
+  int dealerDraw() {
     if (this.getHandSum() < 17) {
       return 1;
     } else {
