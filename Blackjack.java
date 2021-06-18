@@ -5,16 +5,16 @@ class Blackjack {
     Player dealer = new Player();
 
     System.out.print("\nGame Start\n- - - - - - - - - -\n");
-    int con_flag=1;
-    while(con_flag==1){
+    int conFlag=1;
+    while(conFlag==1){
       //盤面のカードの初期化
-      board.init_deck_card();
-      player.init_hand_card();
+      board.initDeckCard();
+      player.initHandCard();
       player.setHandNum(0);
-      dealer.init_hand_card();
+      dealer.initHandCard();
       dealer.setHandNum(0);
 
-      player.choose_coin();
+      player.chooseCoin();
 
       //初期カード配布
       board.hit(dealer);
@@ -23,8 +23,8 @@ class Blackjack {
       board.hit(player);
 
       //プレイヤーとディーラーのカードヒット
-      board.player_hit(player, dealer);
-      board.dealer_hit(player, dealer);
+      board.playerHit(player, dealer);
+      board.dealerHit(player, dealer);
 
       //最終的な盤面の表示
       System.out.println("\nDealer Set");
@@ -38,9 +38,9 @@ class Blackjack {
       System.out.println(player.getHandSum());
 
       //勝敗の処理
-      board.coin_win_lose(player, dealer);
+      board.coinWinLose(player, dealer);
 
-      con_flag=board.game_continue(player);
+      conFlag=board.gameContinue(player);
     }
     System.out.println("Thank you for playing.");
     System.exit(0);

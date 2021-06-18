@@ -3,21 +3,21 @@ import java.util.Scanner;
 
 class Board {
   // 山札のカード
-  // deck_card[n][m]=1のとき、スートがｎで数字がｍ+1のカードが山札にある
+  // deckCard[n][m]=1のとき、スートがｎで数字がｍ+1のカードが山札にある
   // n=0:スペード,n=1:ハート,n=2:ダイヤ,n=3:クラブ
-  private int[][] deck_card = new int[4][13];
+  private int[][] deckCard = new int[4][13];
 
-  void init_deck_card() {
+  void initDeckCard() {
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 13; j++) {
-        deck_card[i][j] = 1;
+        deckCard[i][j] = 1;
       }
     }
   }
 
   // 山札からカードがなくなった時の処理
-  void deck_card_reset(int i, int j) {
-    deck_card[i][j] = 0;
+  void deckCardReset(int i, int j) {
+    deckCard[i][j] = 0;
   }
 
   // カードを引く処理
@@ -28,17 +28,17 @@ class Board {
     do {
       i = rand.nextInt(4);
       j = rand.nextInt(13);
-    } while (deck_card[i][j] == 0);
+    } while (deckCard[i][j] == 0);
     return_card[0] = i;
     return_card[1] = j;
     player.setHandCard(return_card);
-    deck_card_reset(i, j);
-    player.calc_hand();
+    deckCardReset(i, j);
+    player.calcHand();
     player.setHandNum(player.getHandNum() + 1);
   }
 
   // プレイヤーがセットするまでカードを引き続ける処理
-  void player_hit(Player player, Player dealer) {
+  void playerHit(Player player, Player dealer) {
     int set_flag = 0;
     Scanner scanner = new Scanner(System.in);
     while (set_flag == 0) {
@@ -61,7 +61,7 @@ class Board {
       } else {
         System.out.println("Please type h or s correctly.");
       }
-      if (player.is_burst() == 1) {
+      if (player.isBurst() == 1) {
         System.out.print("\n");
         dealer.printCloseHandCard();
         System.out.println("- - - - - - - - - -");
@@ -75,8 +75,8 @@ class Board {
   }
 
   //// ディーラーがセットするまでカードを引き続ける処理
-  void dealer_hit(Player player, Player dealer) {
-    while (dealer.dealer_draw() == 1) {
+  void dealerHit(Player player, Player dealer) {
+    while (dealer.dealerDraw() == 1) {
       System.out.println("\nDealer Hit");
       this.hit(dealer);
       System.out.print("\n");
@@ -89,10 +89,10 @@ class Board {
   }
 
   // 勝敗判定、勝ちで1、分けで0、負けで-1
-  int is_win(Player player, Player dealer) {
-    if(player.is_burst()==0&&dealer.is_burst()==1){return 1;}
-    else if(player.is_burst()==1&&dealer.is_burst()==1){return 0;}
-    else if(player.is_burst()==1&&dealer.is_burst()==0){return -1;}
+  int isWin(Player player, Player dealer) {
+    if(player.isBurst()==0&&dealer.isBurst()==1){return 1;}
+    else if(player.isBurst()==1&&dealer.isBurst()==1){return 0;}
+    else if(player.isBurst()==1&&dealer.isBurst()==0){return -1;}
     else if (player.getHandSum() > dealer.getHandSum()) {
       return 1;
     } else if (player.getHandSum() == dealer.getHandSum()) {
@@ -103,8 +103,8 @@ class Board {
   }
 
   // 勝敗によるコインの処理と画面表示
-  void coin_win_lose(Player player, Player dealer) {
-    if (this.is_win(player, dealer) == 1) {
+  void coinWinLose(Player player, Player dealer) {
+    if (this.isWin(player, dealer) == 1) {
       System.out.print("\n【 You win! 】\nCoin--->");
       player.setCoin(player.getCoin() + player.getBetCoin());
       System.out.print(player.getCoin());
@@ -112,7 +112,7 @@ class Board {
       System.out.print(player.getBetCoin());
       System.out.println(")");
     }
-    else if (this.is_win(player, dealer) == -1) {
+    else if (this.isWin(player, dealer) == -1) {
       System.out.print("\n【 You lose... 】\nCoin--->");
       player.setCoin(player.getCoin() - player.getBetCoin());
       System.out.print(player.getCoin());
@@ -127,8 +127,8 @@ class Board {
   }
 
   //ゲームを続けるかどうか
-  int game_continue(Player player) {
-    if(player.have_coin()==0){
+  int gameContinue(Player player) {
+    if(player.haveCoin()==0){
       System.out.println("You no longer have the coin. \nYou can't continue the game.");
       return 0;
     }
